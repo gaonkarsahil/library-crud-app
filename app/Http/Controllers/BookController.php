@@ -21,16 +21,8 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        return Book::create($validator->validated());
+        $validatedData = $request->only(['validated_data']);
+        return Book::create($validatedData['validated_data']);
     }
 
     /**
@@ -46,16 +38,8 @@ class BookController extends Controller
      */
     public function update(Request $request, Book $book)
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-        
-        $book->update($validator->validated());
+        $validatedData = $request->only(['validated_data']);
+        $book->update($validatedData['validated_data']);
         return $book;
     }
 
