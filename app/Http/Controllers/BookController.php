@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Book;
+use Illuminate\Support\Facades\Validator;
 
 class BookController extends Controller
 {
@@ -20,7 +21,16 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        return Book::create($request->all());
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        return Book::create($validator->validated());
     }
 
     /**
@@ -35,8 +45,17 @@ class BookController extends Controller
      * Update the specified book in library.
      */
     public function update(Request $request, Book $book)
-    {        
-        $book->update($request->all());
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+        
+        $book->update($validator->validated());
         return $book;
     }
 
